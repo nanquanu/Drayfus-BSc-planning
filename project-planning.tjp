@@ -116,7 +116,7 @@ textreport frame "" {
     == Yael Bakker BSc assignment ==
   ->8-
   footer "----"
-  textreport index "Index" {
+  textreport index "index" {
     formats html
     center '<[report id="overview"]>'
   }
