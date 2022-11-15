@@ -1,0 +1,146 @@
+project dba "BSc assignment"  2022-11-07 +20w {
+  timezone "Europe/Amsterdam"
+  timeformat "%Y-%d-%m"
+  # Use US format for numbers
+  numberformat "-" "" "," "." 1
+  # Use US financial format for currency values. Don't show cents.
+  currencyformat "(" ")" "," "." 0
+}
+
+leaves holiday "Kerstvakantie" 2022-12-26 - 2023-01-08
+leaves holiday "Voorjaarsvakantie" 2023-02-20-2023-02-26
+
+resource yael "Yael Bakker" {
+  email "yv.bakker@student.han.nl"
+}
+task project "BSc assignment" {
+  task milestones "Milestones" {
+    task start "Project start" {
+      # A task that has no duration is a milestone. It only needs a
+      # start or end criterion. All other tasks depend on this task.
+      # Here we use the built-in macro ${projectstart} to align the
+      # start of the task with the above specified project time frame.
+      start ${projectstart}
+    }
+    task deadline1 "Inleveren Concept Projectplan" {
+      start 2022-11-18
+      # A task with only a start or end date and no duration specification
+      # is automatically assumed to be a milestone.
+    }
+    task deadline2 "Inleveren Projectplan" {
+      start 2022-12-09
+    }
+    task deadline3 "Inleveren Concept Afstudeerverslag" {
+      start 2023-02-17
+    }
+    task deadline4 "Inleveren Afstudeerverslag" {
+      start 2023-03-24
+    }
+  }
+
+  task voorbereiding "Projectvoorbereiding" {
+    task projectplan "Projectplan" {
+      effort 10d
+      allocate yael
+    }
+  }
+
+  task elaboratie "Elaboratiefase" {
+    depends !voorbereiding
+    task analyse "analyse" {
+      task req_analyse "requirements analyse" {
+        allocate yael
+        effort 1w
+      }
+      task code_analyse "code analyse" {
+        allocate yael
+        effort 1w
+      }
+    }
+
+    task analyserapport "analyserapport" {
+      depends !analyse
+    }
+
+    task onderzoek "onderzoek" {
+      depends !analyse
+      task literatuur "literatuuronderzoek" {
+        allocate yael
+        effort 1w
+      }
+    }
+    
+    task onderzoeksrapport "onderzoeksrapport" {
+      depends !onderzoek
+    }
+  }
+
+  task constructie "Constructiefase" {
+    depends !elaboratie
+    task prototype "prototype maken" {
+      allocate yael
+      effort 4w
+    }
+  }
+
+  task transitie "Transitiefase" {
+    depends !constructie
+    task documentatie "Overdrachtsdocumentatie opstellen" {
+      allocate yael
+      effort 2w
+    }
+  }
+}
+
+macro TaskTip [
+  tooltip istask() -8<-
+    '''Start: ''' <-query attribute='start'->
+    '''End: ''' <-query attribute='end'->
+    ----
+    '''Resources:'''
+
+    <-query attribute='resources'->
+    ----
+    '''Precursors: '''
+
+    <-query attribute='precursors'->
+    ----
+    '''Followers: '''
+
+    <-query attribute='followers'->
+    ->8-
+]
+
+textreport frame "" {
+  header -8<-
+    == Yael Bakker BSc assignment ==
+  ->8-
+  footer "----"
+  textreport index "Index" {
+    formats html
+    center '<[report id="overview"]>'
+  }
+}
+
+# A traditional Gantt chart with a project overview.
+taskreport overview "" {
+  header -8<-
+    === Project Overview ===
+
+    Dit project is gestructureerd in 3 hoofdfases:
+
+    # Elaboratie
+    # Constructie
+    # Transitie
+
+    === Original Project Plan ===
+  ->8-
+  columns bsi { title 'WBS' },
+          name, start, end, effort, chart { ${TaskTip} }
+  # For this report we like to have the abbreviated weekday in front
+  # of the date. %a is the tag for this.
+  timeformat "%a %Y-%m-%d"
+  loadunit days
+  hideresource @all
+  caption 'Effort is in werkdagen'
+}
