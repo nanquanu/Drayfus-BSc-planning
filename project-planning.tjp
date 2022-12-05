@@ -13,6 +13,11 @@ leaves holiday "Voorjaarsvakantie" 2023-02-20-2023-02-26
 resource yael "Yael Bakker" {
   email "yv.bakker@student.han.nl"
 }
+
+resource yael2 "Yael Bakker" {
+  email "yv.bakker@student.han.nl"
+}
+
 task project "BSc assignment" {
   task milestones "Milestones" {
     task start "Project start" {
@@ -39,14 +44,20 @@ task project "BSc assignment" {
   }
 
   task voorbereiding "Projectvoorbereiding" {
+    task concept_projectplan "Concept Projectplan" {
+      effort 2w
+      allocate yael 
+    }
     task projectplan "Projectplan" {
-      effort 10d
-      allocate yael
+      depends !concept_projectplan
+      effort 3w
+      allocate yael2
     }
   }
+  
 
   task elaboratie "Elaboratiefase" {
-    depends !voorbereiding
+    start 2022-11-21
     task analyse "analyse" {
       task req_analyse "requirements analyse" {
         allocate yael
@@ -54,32 +65,52 @@ task project "BSc assignment" {
       }
       task code_analyse "code analyse" {
         allocate yael
-        effort 1w
+        effort 2w
       }
     }
 
-    task analyserapport "analyserapport" {
+    task analyserapport "analysedocumentatie" {
       depends !analyse
     }
 
-    task onderzoek "onderzoek" {
-      depends !analyse
-      task literatuur "literatuuronderzoek" {
-        allocate yael
-        effort 1w
-      }
-    }
-    
-    task onderzoeksrapport "onderzoeksrapport" {
-      depends !onderzoek
-    }
   }
 
   task constructie "Constructiefase" {
     depends !elaboratie
-    task prototype "prototype maken" {
+    task sprint1 "sprint 1" {
       allocate yael
-      effort 4w
+      effort 1w
+    }
+    task sprint2 "sprint 2" {
+      allocate yael
+      effort 1w
+    }
+    task sprint3 "sprint 3" {
+      allocate yael
+      effort 1w
+    }
+    task sprint4 "sprint 4" {
+      allocate yael
+      effort 1w
+    }
+    task sprint5 "sprint 5" {
+      allocate yael
+      effort 1w
+    }
+    task sprint6 "sprint 6" {
+      allocate yael
+      effort 1w
+    }
+    task sprint7 "sprint 7" {
+      allocate yael
+      effort 1w
+    }
+    task sprint8 "sprint 8" {
+      allocate yael
+      effort 1w
+    }
+    task architectuurontwerp "software guidebook" {
+      start 2023-02-17
     }
   }
 
