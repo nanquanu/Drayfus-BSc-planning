@@ -5,6 +5,10 @@ project dba "BSc assignment"  2022-11-07 +20w {
   numberformat "-" "" "," "." 1
   # Use US financial format for currency values. Don't show cents.
   currencyformat "(" ")" "," "." 0
+
+  scenario plan "Plan" {
+    scenario actual "Actual"
+  }
 }
 
 leaves holiday "Kerstvakantie" 2022-12-26 - 2023-01-08
@@ -82,30 +86,38 @@ task project "BSc assignment" {
       effort 1w
     }
     task sprint2 "sprint 2" {
+      depends !sprint1
       allocate yael
+      actual:start 2023-01-09
       effort 1w
     }
     task sprint3 "sprint 3" {
+      depends !sprint2
       allocate yael
       effort 1w
     }
     task sprint4 "sprint 4" {
+      depends !sprint3
       allocate yael
       effort 1w
     }
     task sprint5 "sprint 5" {
+      depends !sprint4
       allocate yael
       effort 1w
     }
     task sprint6 "sprint 6" {
+      depends !sprint5
       allocate yael
       effort 1w
     }
     task sprint7 "sprint 7" {
+      depends !sprint6
       allocate yael
       effort 1w
     }
     task sprint8 "sprint 8" {
+      depends !sprint7
       allocate yael
       effort 1w
     }
@@ -149,12 +161,13 @@ textreport frame "" {
   footer "----"
   textreport index "index" {
     formats html
-    center '<[report id="overview"]>'
+    left '<[report id="plan"]>'
+    center '<[report id="actual"]>'
   }
 }
 
 # A traditional Gantt chart with a project overview.
-taskreport overview "" {
+taskreport plan "" {
   header -8<-
     === Project Overview ===
 
@@ -173,5 +186,29 @@ taskreport overview "" {
   timeformat "%a %Y-%m-%d"
   loadunit days
   hideresource @all
+  scenarios plan
+  caption 'Effort is in werkdagen'
+}
+
+taskreport actual "" {
+  header -8<-
+    === Project Overview ===
+
+    Dit project is gestructureerd in 3 hoofdfases:
+
+    # Elaboratie
+    # Constructie
+    # Transitie
+
+    === Actual Project Plan ===
+  ->8-
+  columns bsi { title 'WBS' },
+          name, start, end, effort, chart { ${TaskTip} }
+  # For this report we like to have the abbreviated weekday in front
+  # of the date. %a is the tag for this.
+  timeformat "%a %Y-%m-%d"
+  loadunit days
+  hideresource @all
+  scenarios actual
   caption 'Effort is in werkdagen'
 }
